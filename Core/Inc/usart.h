@@ -35,13 +35,13 @@ extern "C" {
 extern UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN Private defines */
-
+#define REC_LEN_USART1 1 // 定义接收缓冲区长度
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+extern char receivedDataUSART1[REC_LEN_USART1]; // 字符串类型接收数据缓冲区
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
