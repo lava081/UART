@@ -45,7 +45,7 @@ extern UART_HandleTypeDef huart3;
 extern UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN Private defines */
-#define REC_LEN_USART1 1 // 定义接收缓冲区长度
+#define REC_LEN_USART1 10 // 定义接收缓冲区长度
 /* USER CODE END Private defines */
 
 void MX_UART4_Init(void);
