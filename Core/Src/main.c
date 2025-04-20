@@ -98,6 +98,12 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 	HAL_UART_Transmit(&huart1, (uint8_t *)"\r\nUSART1 connected!", 20, HAL_MAX_DELAY); // 开机打个招呼
+  
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1); // 启动定时器1 PWM 输出通道1
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2); // 启动定时器1 PWM 输出通道2
+
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint32_t)(0.6 * (htim1.Init.Period + 1))); // 设置定时器1 PWM 输出通道1 占空比为60%
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, (uint32_t)(1.0 * (htim1.Init.Period + 1))); // 设置定时器1 PWM 输出通道2 占空比为100%
 
   /* USER CODE END 2 */
 
