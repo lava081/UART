@@ -53,8 +53,6 @@ void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
-  HAL_NVIC_EnableIRQ(USART1_IRQn); // 使能 USART1 中断
-  HAL_NVIC_SetPriority(USART1_IRQn, 3, 3); // 设置 USART1 中断优先级
   HAL_UART_Receive_IT(&huart1, (uint8_t *)receivedDataUSART1, sizeof(receivedDataUSART1)); // 启动接收中断
   /* USER CODE END USART1_Init 2 */
 
@@ -107,6 +105,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     */
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9|GPIO_PIN_10);
 
+    /* USART1 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspDeInit 1 */
 
   /* USER CODE END USART1_MspDeInit 1 */
@@ -114,14 +114,6 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
-
-/**
- * @brief 处理 USART1 中断请求
- */
-void USART1_IRQHandler(void)
-{
-	HAL_UART_IRQHandler(&huart1); // 直接调用 HAL 库的中断处理函数
-}
 
 /**
  * @brief 处理 USART1 接收完成中断回调函数
