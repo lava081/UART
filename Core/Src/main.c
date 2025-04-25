@@ -182,7 +182,7 @@ void set_pwm(char *receivedDataUSART1) {
       __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, (uint32_t)(percent * (htim1.Init.Period + 1) / 100)); // 设置定时器1 PWM 输出通道2 占空比
       sprintf(sendDataUART1, "\nCH2 percent:%d", percent); // 将整数转换为字符串
     }
-    else if (strncmp(receivedDataUSART1 + 2, "ALL", 3) == 0) // Timer1 All
+    else if (strncmp(receivedDataUSART1 + 2, "ALL", 3) == 0) // Timer1 Channel1 和 Channel2
     {
       __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint32_t)(percent * (htim1.Init.Period + 1) / 100)); // 设置定时器1 PWM 输出通道1 占空比
       __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, (uint32_t)(percent * (htim1.Init.Period + 1) / 100)); // 设置定时器1 PWM 输出通道2 占空比
