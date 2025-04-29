@@ -27,6 +27,7 @@
 #include <stdio.h> // 引入标准输入输出库
 #include <string.h> // 引入字符串处理库
 #include <stdlib.h> // 引入标准库
+#include "user.h" // 引入用户头文件
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -106,6 +107,7 @@ int main(void)
 
   __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint32_t)(0.6 * (htim1.Init.Period + 1))); // 设置定时器1 PWM 输出通道1 占空比为60%
   __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, (uint32_t)(1.0 * (htim1.Init.Period + 1))); // 设置定时器1 PWM 输出通道2 占空比为100%
+  debug_init(); // 初始化调试串口
 
   /* USER CODE END 2 */
 
