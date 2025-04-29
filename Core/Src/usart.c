@@ -22,8 +22,6 @@
 
 /* USER CODE BEGIN 0 */
 
-char receivedDataUSART1[REC_LEN_USART1]; // 字符串类型接收数据缓冲区
-
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -53,7 +51,7 @@ void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
-  HAL_UART_Receive_IT(&huart1, (uint8_t *)receivedDataUSART1, sizeof(receivedDataUSART1)); // 启动接收中断
+  
   /* USER CODE END USART1_Init 2 */
 
 }
@@ -114,31 +112,5 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
-
-/**
- * @brief 处理 USART1 接收完成中断回调函数
- * @param huart: 指向 UART_HandleTypeDef 结构体的指针
- */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-  if (huart->Instance == USART1) // 判断是否是 USART1 的中断请求
-  {
-    HAL_UART_Transmit(&huart1, (uint8_t *)"\nrx succeed:", 12, HAL_MAX_DELAY); // 输出接收成功提示,注意删除\0
-    HAL_UART_Transmit(&huart1, (uint8_t *)&receivedDataUSART1, sizeof(receivedDataUSART1), HAL_MAX_DELAY); // 回显接收到的数据
-    HAL_UART_Receive_IT(&huart1, (uint8_t *)&receivedDataUSART1, sizeof(receivedDataUSART1)); // 重新启动接收中断
-  }
-}
-
-/**
- * @brief 处理 USART1 发送完成中断回调函数
- * @param huart: 指向 UART_HandleTypeDef 结构体的指针
- */
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if (huart->Instance == USART1) // 判断是否是 USART1 的中断请求
-	{
-    // 啥都不干
-	}
-}
 
 /* USER CODE END 1 */

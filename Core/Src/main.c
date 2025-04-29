@@ -93,8 +93,7 @@ int main(void)
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
-
-	HAL_UART_Transmit(&huart1, (uint8_t *)"\r\nUSART1 connected!", 20, HAL_MAX_DELAY); // 开机打个招呼
+  
   debug_init(); // 初始化调试串口
 
   /* USER CODE END 2 */
