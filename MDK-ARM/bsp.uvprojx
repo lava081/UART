@@ -1397,6 +1397,21 @@
               <FileType>1</FileType>
               <FilePath>..\User\Src\debug.c</FilePath>
             </File>
+            <File>
+              <FileName>pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Src\pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>user.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Src\user.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Src\user_uart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -24,10 +24,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h> // 引入标准输入输出库
-#include <string.h> // 引入字符串处理库
-#include <stdlib.h> // 引入标准库
+
 #include "user.h" // 引入用户头文件
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,14 +99,7 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-	HAL_UART_Transmit(&huart1, (uint8_t *)"\r\nUSART1 connected!", 20, HAL_MAX_DELAY); // 开机打个招呼
-  
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1); // 启动定时器1 PWM 输出通道1
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2); // 启动定时器1 PWM 输出通道2
-
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint32_t)(0.6 * (htim1.Init.Period + 1))); // 设置定时器1 PWM 输出通道1 占空比为60%
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, (uint32_t)(1.0 * (htim1.Init.Period + 1))); // 设置定时器1 PWM 输出通道2 占空比为100%
-  debug_init(); // 初始化调试串口
+  user_init(); // 初始化调试函数
 
   /* USER CODE END 2 */
 
@@ -164,53 +156,6 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
-/**
- * @brief 设置 TIM1 的 PWM 输出
- * @param receivedDataUSART1: 接收到的数据
- */
-void set_pwm(char *receivedDataUSART1) {
-  if (strncasecmp(receivedDataUSART1, "T1", 2) == 0) // Timer1
-  {
-    int percent = atoi(receivedDataUSART1 + 6); // 将字符串转换为整数
-    char sendDataUART1[16]; // 定义一个字符数组用于存储转换后的数据
-    if (strncmp(receivedDataUSART1 + 2, "CH1", 3) == 0) // Timer1 Channel1
-    {
-      __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint32_t)(percent * (htim1.Init.Period + 1) / 100)); // 设置定时器1 PWM 输出通道1 占空比
-      sprintf(sendDataUART1, "\nCH1 percent:%d", percent); // 将整数转换为字符串
-    }
-    else if (strncmp(receivedDataUSART1 + 2, "CH2", 3) == 0) // Timer1 Channel2
-    {
-      __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, (uint32_t)(percent * (htim1.Init.Period + 1) / 100)); // 设置定时器1 PWM 输出通道2 占空比
-      sprintf(sendDataUART1, "\nCH2 percent:%d", percent); // 将整数转换为字符串
-    }
-    else if (strncmp(receivedDataUSART1 + 2, "ALL", 3) == 0) // Timer1 Channel1 和 Channel2
-    {
-      __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint32_t)(percent * (htim1.Init.Period + 1) / 100)); // 设置定时器1 PWM 输出通道1 占空比
-      __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, (uint32_t)(percent * (htim1.Init.Period + 1) / 100)); // 设置定时器1 PWM 输出通道2 占空比
-      sprintf(sendDataUART1, "\n1&2 percent:%d", percent); // 将整数转换为字符串
-    }
-    HAL_UART_Transmit(&huart1, (uint8_t *)sendDataUART1, strlen(sendDataUART1), HAL_MAX_DELAY); // 发送设置成功的提示信息
-  }
-}
-
-/**
- * @brief 处理 USART1 接收完成中断回调函数
- * @param huart: 指向 UART_HandleTypeDef 结构体的指针
- */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-  if (huart->Instance == USART1) // 判断是否是 USART1 的中断请求
-  {
-    HAL_UART_Transmit(&huart1, (uint8_t *)"\nuart1:", 7, HAL_MAX_DELAY); // 输出接收成功提示,注意删除\0
-    HAL_UART_Transmit(&huart1, (uint8_t *)&receivedDataUSART1, sizeof(receivedDataUSART1), HAL_MAX_DELAY); // 回显接收到的数据
-    if (strncasecmp(receivedDataUSART1, "T1", 2) == 0) // Timer1
-    {
-      set_pwm(receivedDataUSART1); // 设置 PWM 输出
-    }
-    HAL_UART_Receive_IT(&huart1, (uint8_t *)&receivedDataUSART1, sizeof(receivedDataUSART1) - 1); // 重新启动接收中断
-  }
-}
 
 /* USER CODE END 4 */
 
