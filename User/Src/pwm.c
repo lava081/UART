@@ -20,6 +20,11 @@ void set_pwm(uint8_t timer, uint8_t channel, uint8_t percent)
   TIM_HandleTypeDef *htim; // 定义定时器句柄
   uint8_t TIM_CHANNEL;     // 定义通道号
 
+  if (percent > 100 || percent < 0) // 占空比范围检查
+  {
+    return;
+  }
+
   switch (timer)
   { // 选择定时器
   case 1:
