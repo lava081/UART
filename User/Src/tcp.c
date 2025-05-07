@@ -9,7 +9,7 @@
 char rx_tcp[RX_TCP_LEN];
 char rx_tcp_msg[RX_TCP_LEN];
 size_t rx_tcp_msg_deal_param = 0; // 接收数据处理状态
-uint8_t TCP_STATE = 0; // 设置成功标志
+uint8_t TCP_STATE = 0;            // 设置成功标志
 
 void _tx_tcp_until_success(char *str, size_t len);
 void _tx_tcp_until_result(char *str, size_t len);
@@ -26,7 +26,7 @@ void tcp_init(void)
   {
     HAL_Delay(500); // 延时等待
   } // 清除标志位
-  _tx_tcp_until_success("ATE0\r\n", 6);                                                                                                        // 关闭回显
+  _tx_tcp_until_success("ATE0\r\n", 6);         // 关闭回显
   _tx_tcp_until_success("AT+CIPMUX=1\r\n", 13); // 设置多连接模式
   char command[100];
   sprintf(command, "AT+CIPSTART=%d,\"TCP\",\"%s\",%d,%d\r\n", DEBUG_SERVER_ID, DEBUG_SERVER_HOST, DEBUG_SERVER_PORT, DEBUG_SERVER_KEEP_ALIVE); // 连接debug端口
@@ -54,8 +54,8 @@ void rx_tcp_stat_deal_IT(size_t size)
   else if (strstr(rx_tcp, "+IPD"))
   {
     memcpy(rx_tcp_msg, rx_tcp, size); // 拷贝数据
-    rx_tcp_msg_deal_param = size; // 设置接收数据处理状态
-    memset(rx_tcp, 0, size); // 清空接收缓冲区
+    rx_tcp_msg_deal_param = size;     // 设置接收数据处理状态
+    memset(rx_tcp, 0, size);          // 清空接收缓冲区
   }
   else if (strstr(rx_tcp, "WIFI GOT IP"))
   { // 设置成功
@@ -78,18 +78,18 @@ void rx_tcp_msg_deal(size_t size)
     TCP_STATE = 2; // 设置失败
     return;
   }
-  memcpy(length, p, p1 - p); // 拷贝数据长度
+  memcpy(length, p, p1 - p);   // 拷贝数据长度
   uint16_t len = atoi(length); // 转换为整数
   p1++;                        // 跳过":"
   switch (id)
   {
-  case DEBUG_SERVER_ID:        // 处理debug端口数据
+  case DEBUG_SERVER_ID: // 处理debug端口数据
     while (rx_debug_deal_param)
     {
     } // 等待接收数据处理完成
-    memcpy(rx_debug, p1, len); // 拷贝数据
-    rx_debug_deal_param = len; // 通知接收数据处理函数开始处理数据
-    memset(rx_tcp_msg, 0, size);  // 清空接收缓冲区
+    memcpy(rx_debug, p1, len);   // 拷贝数据
+    rx_debug_deal_param = len;   // 通知接收数据处理函数开始处理数据
+    memset(rx_tcp_msg, 0, size); // 清空接收缓冲区
     break;
   }
 }
@@ -115,7 +115,7 @@ void _tx_tcp_until_result(char *str, size_t len)
 void _tx_tcp_until_success(char *str, size_t len)
 {
   uint32_t start_systick = HAL_GetTick(); // 执行操作的系统滴答时间
-  uint8_t retry = 0;               // 重试次数
+  uint8_t retry = 0;                      // 重试次数
   _tx_tcp_until_result(str, len);         // 发送数据
   while (TCP_STATE == 2)
   {

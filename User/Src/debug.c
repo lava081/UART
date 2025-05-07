@@ -2,11 +2,11 @@
 #include "tcp.h" // TCP头文件
 #include "pwm.h"
 #include "user_uart.h" // 串口头文件
-#include <stdio.h>  // 标准输入输出库
-#include <string.h> // 字符串处理库
-#include <stdlib.h> // 标准库
+#include <stdio.h>     // 标准输入输出库
+#include <string.h>    // 字符串处理库
+#include <stdlib.h>    // 标准库
 
-char rx_debug[RX_DEBUG_LEN]; // 字符串类型接收数据缓冲区
+char rx_debug[RX_DEBUG_LEN];    // 字符串类型接收数据缓冲区
 size_t rx_debug_deal_param = 0; // 接收数据处理状态
 
 void debug_init(void)
@@ -16,7 +16,7 @@ void debug_init(void)
 
 void rx_debug_deal(size_t size)
 {
-  tx_debug_send(rx_debug, size); // 发送接收数据
+  tx_debug_send(rx_debug, size);            // 发送接收数据
   if (strncasecmp(rx_debug, "TIM", 3) == 0) // 操作定时器参数
   {
     uint8_t timer;
