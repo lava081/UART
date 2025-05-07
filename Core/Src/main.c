@@ -99,7 +99,7 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  user_init(); // 初始化调试函数
+  user_init();
 
   /* USER CODE END 2 */
 

@@ -1412,6 +1412,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Src\user_uart.c</FilePath>
             </File>
+            <File>
+              <FileName>tcp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Src\tcp.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
