@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "dan-c-underwood.arm",
+    "ms-vscode.cpptools",
+    "ms-vscode.cpptools-extension-pack",
+    "ms-vscode.cpptools-themes",
+    "ms-ceintl.vscode-language-pack-zh-hans",
+    "twxs.cmake",
+    "ms-vscode.cmake-tools",
+    "marus25.cortex-debug",
+    "mcu-debug.debug-tracker-vscode",
+    "trond-snekvik.gnu-mapfiles",
+    "ms-vscode.makefile-tools",
+    "mcu-debug.memory-view",
+    "mcu-debug.rtos-views",
+    "stmicroelectronics.stm32-vscode-extension"
+  ]
+}

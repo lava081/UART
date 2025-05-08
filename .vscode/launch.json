@@ -1,0 +1,19 @@
+{
+  "configurations": [
+    {
+      "name": "ST-Link",
+      "cwd": "${workspaceFolder}",
+      "executable": "./build/bsp.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "stutil",
+      "serverpath": "E:\\STM32 ST-LINK Utility\\stlink-1.8.0-win32\\bin\\st-util.exe",
+      "interface": "swd",
+      "v1": false,
+      "device": "STM32F407ZG",
+      "svdFile": "./STM32F407.svd",
+      "runToEntryPoint": "main",
+      "showDevDebugOutput": "both",
+    },
+  ]
+}
