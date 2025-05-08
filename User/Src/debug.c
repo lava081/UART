@@ -11,19 +11,19 @@ size_t rx_debug_deal_param = 0; // 接收数据处理状态
 
 void debug_init(void)
 {
-  tx_debug_send("\rUSART1 connected!", 18); // 初始化调试函数
+  tx_debug_send("\r调试串口已连接!", 23); // 初始化调试函数
 }
 
 void rx_debug_deal(size_t size)
 {
   tx_debug_send(rx_debug, size);            // 发送接收数据
-  if (strncasecmp(rx_debug, "TIM", 3) == 0) // 操作定时器参数
+  if (strncmp(rx_debug, "TIM", 3) == 0) // 操作定时器参数
   {
     uint8_t timer;
     timer = rx_debug[3] - '0';                   // 你问我想用TIM12怎么办？那我问你，你不会改成固定两位编码然后加减乘除吗？
-    if (strncasecmp(rx_debug + 4, "CH", 2) == 0) // 设置定时器输出占空比
+    if (strncmp(rx_debug + 4, "CH", 2) == 0) // 设置定时器输出占空比
     {
-      char tx_debug[9], tip[3];
+      char tx_debug[9], tip[4];
       uint8_t channel, percent;
       channel = rx_debug[6] - '0';
       percent = atoi(rx_debug + 8); // 将字符串转换为整数
