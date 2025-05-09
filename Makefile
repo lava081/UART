@@ -6,6 +6,7 @@
 # Generic Makefile (based on gcc)
 #
 # ChangeLog :
+#	2025-05-08 - 指定使用Os优化和C23特性 + 将User文件夹下的文件添加到编译列表中
 #	2017-02-10 - Several enhancements + project update mode
 #   2015-07-22 - first version
 # ------------------------------------------------
