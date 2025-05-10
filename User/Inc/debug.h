@@ -2,6 +2,7 @@
 
 void debug_init(void);
 void rx_debug_deal(size_t size);
+void tx_debug_send(char *str, size_t len);
 
 #define RX_DEBUG_LEN 100 // 定义接收缓冲区长度
 

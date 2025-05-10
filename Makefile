@@ -63,6 +63,7 @@ Core/Src/system_stm32f4xx.c \
 User/Src/user.c \
 User/Src/user_uart.c \
 User/Src/pwm.c \
+User/Src/esp8266.c \
 User/Src/tcp.c \
 User/Src/debug.c
 

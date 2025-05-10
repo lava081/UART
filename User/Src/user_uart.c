@@ -9,11 +9,11 @@
 #include "string.h"    // 字符串处理头文件
 
 /** 所有需要收串口的头文件定义一下接受缓冲区然后在这导入 */
-#include "tcp.h"
+#include "esp8266.h"
 
 void user_uart_init(void)
 {
-  HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)rx_tcp, RX_TCP_LEN);
+  HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)rx_esp, RX_ESP_LEN);
 }
 
 /**
@@ -25,12 +25,12 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
   if (huart->Instance == USART1)
   {
-    rx_tcp_stat_deal_IT(Size); // 处理接收数据
-    HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)rx_tcp, RX_TCP_LEN);
+    rx_esp_deal_IT(Size); // 处理接收数据
+    HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)rx_esp, RX_ESP_LEN);
   }
 }
 
-void tx_tcp_send(char *str, size_t len)
+void tx_esp_send(char *str, size_t len)
 {
   HAL_UART_Transmit_IT(&huart1, (uint8_t *)str, len); // 发送数据
 }
