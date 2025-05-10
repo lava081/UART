@@ -75,6 +75,7 @@ st官网的文档支持->[`cad-resources`板块](https://www.st.com/en/microcont
 按`F5`开始调试，调试器选择`ST-LINK调试`
 
 如果你只想下载，不想调试:
+
 ```sh
 st-flash --reset write build/bsp.bin 0x8000000
 ```

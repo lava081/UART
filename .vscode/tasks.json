@@ -1,0 +1,51 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "编译",
+      "type": "shell",
+      "command": "make",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "清理编译结果",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "clean"
+      ],
+      "group": {
+        "kind": "build"
+      },
+    },
+    {
+      "label": "重新编译",
+      "type": "shell",
+      "command": "make",
+      "group": {
+        "kind": "build"
+      },
+      "problemMatcher": ["$gcc"],
+      "dependsOn": [
+        "清理编译结果"
+      ]
+    },
+    {
+      "label": "ST-LINK下载",
+      "type": "shell",
+      "command": "st-flash",
+      "args": [
+        "--reset",
+        "write",
+        "${workspaceFolder}/build/bsp.bin",
+        "0x8000000"
+      ],
+    }
+  ]
+}

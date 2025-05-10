@@ -14,3 +14,9 @@ Firmware Package: STM32Cube FW_F4 V1.28.1
 # 食用指南
 
 ### [构建指南](./doc/build.md)
+
+### [VSCode使用指引](./doc/vscode.md)
+
+### [编译选项说明](./doc/make.md)
+
+# [开源许可证](./LICENSE)
