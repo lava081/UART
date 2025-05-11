@@ -9,13 +9,14 @@ void esp_init(void)
 {
   ESP_STATE = 2;
   char cmd[25];
-  sprintf(cmd, "AT+PING=\"%s\"\r\n", ESP_PING_URL);
+  sprintf(cmd, "AT+CIPDOMAIN=\"%s\"\r\n", ESP_PING_URL);
   while (ESP_STATE == 2)
   {
     tx_esp_until_result(cmd, strlen(cmd));
     HAL_Delay(500); // 延时等待
   }
   tx_esp_until_success("ATE0\r\n", 6);         // 关闭回显
+  tx_esp_until_success("AT+SLEEP=0\r\n", 13);  // 取消休眠
 }
 
 void rx_esp_deal_IT(size_t size)

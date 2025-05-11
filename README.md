@@ -13,10 +13,16 @@ Firmware Package: STM32Cube FW_F4 V1.28.2
 
 # 食用指南
 
-### [构建指南](./doc/build.md)
+## [构建指南](./doc/build.md)
 
-### [VSCode使用指引](./doc/vscode.md)
+## [VSCode使用指引](./doc/vscode.md)
 
-### [编译选项说明](./doc/make.md)
+## [编译选项说明](./doc/make.md)
+
+## 设备配置信息
+
+1. [核心板](./doc/device/LXB407ZG-P1.md)
+
+2. [ESP-01S](./doc/device/ESP-01S.md)
 
 # [开源许可证](./LICENSE)
