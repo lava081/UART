@@ -2,7 +2,7 @@
 
 # 基本信息
 
-Firmware Package: STM32Cube FW_F4 V1.28.1
+Firmware Package: STM32Cube FW_F4 V1.28.2
 
 芯片: STM32F407ZGT6
 
