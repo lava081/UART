@@ -1,8 +1,22 @@
 #include "esp8266.h"
 #include <string.h> // 字符串库
+#include <stdio.h>  // 标准库
 
 char rx_esp[RX_ESP_LEN];
-uint8_t ESP_STATE = 0;            // 设置成功标志
+uint8_t ESP_STATE;            // 设置成功标志
+
+void esp_init(void)
+{
+  ESP_STATE = 2;
+  char cmd[25];
+  sprintf(cmd, "AT+PING=\"%s\"\r\n", ESP_PING_URL);
+  while (ESP_STATE == 2)
+  {
+    tx_esp_until_result(cmd, strlen(cmd));
+    HAL_Delay(500); // 延时等待
+  }
+  tx_esp_until_success("ATE0\r\n", 6);         // 关闭回显
+}
 
 void rx_esp_deal_IT(size_t size)
 {

@@ -8,19 +8,15 @@
 
 void tcp_init(void)
 {
-  tx_esp_until_result("AT+CIPSEND=0,1\r\n", 16);
+  char command[100];
+  sprintf(command, "AT+CIPSEND=%d,1\r\n", DEBUG_SERVER_ID); // 设置keep alive时间
+  tx_esp_until_result(command, strlen(command));
   if (ESP_STATE == 0)
-  { // wifi无需初始化
-    tx_esp_until_result("\n", 1);
+  { // tcp无需初始化
+    tx_esp_until_success("\n", 1);
     return;
   }
-  while (ESP_STATE == 2) // 等待设置成功
-  {
-    HAL_Delay(500); // 延时等待
-  } // 清除标志位
-  tx_esp_until_success("ATE0\r\n", 6);         // 关闭回显
   tx_esp_until_success("AT+CIPMUX=1\r\n", 13); // 设置多连接模式
-  char command[100];
   sprintf(command, "AT+CIPSTART=%d,\"TCP\",\"%s\",%d,%d\r\n", DEBUG_SERVER_ID, DEBUG_SERVER_HOST, DEBUG_SERVER_PORT, DEBUG_SERVER_KEEP_ALIVE); // 连接debug端口
   tx_esp_until_success(command, strlen(command));
 }
