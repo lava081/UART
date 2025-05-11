@@ -13,7 +13,7 @@
 
 void user_uart_init(void)
 {
-  HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)rx_esp, RX_ESP_LEN);
+  HAL_UARTEx_ReceiveToIdle_IT(&huart2, (uint8_t *)rx_esp, RX_ESP_LEN);
 }
 
 /**
@@ -23,14 +23,14 @@ void user_uart_init(void)
  */
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
-  if (huart->Instance == USART1)
+  if (huart->Instance == USART2)
   {
     rx_esp_deal_IT(Size); // 处理接收数据
-    HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)rx_esp, RX_ESP_LEN);
+    HAL_UARTEx_ReceiveToIdle_IT(&huart2, (uint8_t *)rx_esp, RX_ESP_LEN);
   }
 }
 
 void tx_esp_send(char *str, size_t len)
 {
-  HAL_UART_Transmit_IT(&huart1, (uint8_t *)str, len); // 发送数据
+  HAL_UART_Transmit_IT(&huart2, (uint8_t *)str, len); // 发送数据
 }

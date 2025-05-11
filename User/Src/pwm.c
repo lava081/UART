@@ -3,18 +3,18 @@
 
 void pwm_init(void)
 {
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1); // 启动定时器1 PWM 输出通道1
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1); // 启动定时器1 PWM 输出通道1
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
 
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint32_t)(0.6 * (htim1.Init.Period + 1))); // 设置定时器1 PWM 输出通道1 占空比为60%
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, (uint32_t)(0.4 * (htim1.Init.Period + 1)));
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, (uint32_t)(0.2 * (htim1.Init.Period + 1)));
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, (uint32_t)(0.8 * (htim1.Init.Period + 1)));
+  set_pwm(2, 1, 1); // 设置定时器2 PWM 输出通道1 占空比为1%
+  set_pwm(2, 2, 1); // 设置定时器2 PWM 输出通道2 占空比为1%
+  set_pwm(2, 3, 1); // 设置定时器2 PWM 输出通道3 占空比为1%
+  set_pwm(2, 4, 1); // 设置定时器2 PWM 输出通道4 占空比为1%
 }
 
-void set_pwm(uint8_t timer, uint8_t channel, uint8_t percent)
+void set_pwm(uint8_t timer, uint8_t channel, float percent)
 {
 
   TIM_HandleTypeDef *htim; // 定义定时器句柄
@@ -27,8 +27,8 @@ void set_pwm(uint8_t timer, uint8_t channel, uint8_t percent)
 
   switch (timer)
   { // 选择定时器
-  case 1:
-    htim = &htim1;
+  case 2:
+    htim = &htim2;
     break;
   }
 
@@ -46,6 +46,8 @@ void set_pwm(uint8_t timer, uint8_t channel, uint8_t percent)
   case 4:
     TIM_CHANNEL = TIM_CHANNEL_4;
     break;
+  default:
+    return; // 无效通道
   }
-  __HAL_TIM_SET_COMPARE(htim, TIM_CHANNEL, (uint32_t)(percent * (htim1.Init.Period + 1) / 100));
+  __HAL_TIM_SET_COMPARE(htim, TIM_CHANNEL, (uint32_t)(percent * (htim->Init.Period + 1) / 100));
 }

@@ -19,14 +19,16 @@ void rx_debug_deal(size_t size)
   tx_debug_send(rx_debug, size);            // 发送接收数据
   if (strncmp(rx_debug, "TIM", 3) == 0) // 操作定时器参数
   {
+    rx_debug[size] = '\0'; // 添加字符串结束符
     uint8_t timer;
     timer = rx_debug[3] - '0';                   // 你问我想用TIM12怎么办？那我问你，你不会改成固定两位编码然后加减乘除吗？
     if (strncmp(rx_debug + 4, "CH", 2) == 0) // 设置定时器输出占空比
     {
-      char tx_debug[9], tip[4];
-      uint8_t channel, percent;
-      channel = rx_debug[6] - '0';
-      percent = atoi(rx_debug + 8); // 将字符串转换为整数
+      char tip[5];
+      uint8_t channel;
+      float percent;
+      channel = rx_debug[6] - '0'; // 取出通道号
+      percent = (float)atof(rx_debug + 8); // 将字符串转换为浮点数
 
       if (percent == 0)
       {
@@ -59,7 +61,8 @@ void rx_debug_deal(size_t size)
         set_pwm(timer, channel, percent);
         sprintf(tip, "CH%d", channel); // 将整数转换为字符串
       }
-      sprintf(tx_debug, "\n%s %d%%", tip, percent); // 将整数转换为字符串
+      char tx_debug[10]; // 发送缓冲区
+      sprintf(tx_debug, "\n%s %d%%", tip, (int)percent); // 不知道为什么打印不了%f，投降
       tx_debug_send(tx_debug, strlen(tx_debug));
     }
   }
