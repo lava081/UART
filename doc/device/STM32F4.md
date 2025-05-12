@@ -102,7 +102,11 @@ $$ f_{PWM} = \frac{72 MHz}{1999+1} = 36 kHz $$
 
 $$ V_{out} = V_{in} \cdot \frac{Pulse}{Period+1} \times 100 \% $$
 
-例如，当`Period (ARR)`为`1999`，`Pulse`为`2000`时，占空比为 $ \frac{2000}{1999+1} = 100 \% $，在`PWM mode 1`下输出恒为高电平
+例如，当`Period (ARR)`为`1999`，`Pulse`为`2000`时，占空比为
+
+$$ \frac{2000}{1999+1} = 100 \% $$
+
+在`PWM mode 1`下输出恒为高电平
 
 ## UART
 
