@@ -21,7 +21,7 @@ Firmware Package: STM32Cube FW_F4 V1.28.2
 
 ## 设备配置信息
 
-1. [STM32](./doc/device/LXB407ZG-P1.md)
+1. [STM32](./doc/device/STM32F4.md)
 
 2. [ESP8266](./doc/device/ESP8266.md)
 
