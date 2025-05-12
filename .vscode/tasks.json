@@ -11,7 +11,9 @@
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": ["$gcc"]
+      "problemMatcher": [
+        "$gcc"
+      ]
     },
     {
       "label": "清理编译结果",
@@ -22,7 +24,7 @@
       ],
       "group": {
         "kind": "build"
-      },
+      }
     },
     {
       "label": "重新编译",
@@ -31,7 +33,9 @@
       "group": {
         "kind": "build"
       },
-      "problemMatcher": ["$gcc"],
+      "problemMatcher": [
+        "$gcc"
+      ],
       "dependsOn": [
         "清理编译结果"
       ]
@@ -46,6 +50,7 @@
         "${workspaceFolder}/build/bsp.bin",
         "0x8000000"
       ],
+      "problemMatcher": []
     }
   ]
 }
