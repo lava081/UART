@@ -11,7 +11,7 @@ void tcp_init(void)
   char command[100];
   sprintf(command, "AT+CIPSEND=%d,1\r\n", DEBUG_SERVER_ID); // 设置keep alive时间
   tx_esp_until_result(command, strlen(command));
-  if (ESP_STATE == 0)
+  if (ESP_STATE != 2)
   { // tcp无需初始化
     tx_esp_until_success("\n", 1);
     return;

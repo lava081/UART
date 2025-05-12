@@ -21,6 +21,7 @@ void esp_init(void)
 
 void rx_esp_deal_IT(size_t size)
 {
+  rx_esp[size] = '\0'; // 添加字符串结束符
   if (strstr(rx_esp, "OK"))
   { // 设置成功
     ESP_STATE = 1;
@@ -37,6 +38,7 @@ void rx_esp_deal_IT(size_t size)
   { // 设置成功
     ESP_STATE = 3;
   }
+  memset(rx_esp, 0, size); // 清除接收缓冲区
 }
 
 void tx_esp_until_success(char *str, size_t len)
@@ -60,10 +62,6 @@ void tx_esp_until_success(char *str, size_t len)
       start_systick = HAL_GetTick();
     }
   }
-  if (ESP_STATE == 1) // 防止延时时间内触发的成功
-  {                   // 设置成功
-    ESP_STATE = 0;    // 清除标志位
-  }
 }
 
 void tx_esp_until_result(char *str, size_t len)
@@ -77,10 +75,6 @@ void tx_esp_until_result(char *str, size_t len)
     {
       ESP_STATE = 2; // 设置失败
     }
-  }
-  if (ESP_STATE == 1)
-  {
-    ESP_STATE = 0;
   }
 }
 
