@@ -1,11 +1,27 @@
+/**
+ * @file debug.h
+ * @brief 调试逻辑
+ * @author lava081
+ */
 #include "main.h"
 
 void debug_init(void);
-void rx_debug_deal(size_t size);
-void tx_debug_send(char *str, size_t len);
 
-#define RX_DEBUG_LEN 100 // 定义接收缓冲区长度
+/**
+ * @brief 在主循环处理调试信息
+ * @param size 接收数据的长度
+ */
+void rx_debug_deal(uint16_t size);
 
-extern char rx_debug[RX_DEBUG_LEN]; // 字符串类型接收数据缓冲区
+/**
+ * @brief 发送数据到调试串口
+ * @param str 发送的字符串
+ * @param len 发送数据的长度
+ */
+void tx_debug_send(char *str, uint16_t len);
 
-extern size_t rx_debug_deal_param; // 接收数据处理状态
+#define RX_DEBUG_LEN 100 // 定义接收缓冲区大小(bit): debug
+
+extern char rx_debug[RX_DEBUG_LEN]; // 接收缓冲区: debug
+
+extern uint16_t rx_debug_deal_param; // debug接收函数入参

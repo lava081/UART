@@ -1,7 +1,16 @@
+/**
+ * @file user.c
+ * @brief 初始化和调用其他用户功能
+ * @author lava081
+ */
 #include "user.h"
 
+/**
+ * @brief 初始化用户部分
+ */
 void user_init(void)
-{ // 调用其他用户初始化函数
+{
+  /** 依次初始化各个外设 */
   user_uart_init();
   pwm_init();
   esp_init();
@@ -9,11 +18,16 @@ void user_init(void)
   debug_init();
 }
 
+/**
+ * @brief 主循环用户部分
+ * @details 用于处理回调中不便处理的耗时逻辑和主逻辑
+ */
 void user_deal(void)
 {
-  if (rx_debug_deal_param) // 接收数据处理状态
+  /** debug.c 有待处理消息  */
+  if (rx_debug_deal_param)
   {
-    rx_debug_deal(rx_debug_deal_param); // 处理接收数据
-    rx_debug_deal_param = 0;            // 清除接收数据处理状态
+    rx_debug_deal(rx_debug_deal_param);
+    rx_debug_deal_param = 0; // 清除标志位
   }
 }

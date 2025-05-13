@@ -1,19 +1,31 @@
+/**
+ * @file pwm.c
+ * @brief PWM输出控制
+ * @details 请提前在CubeMX中将定时器通道配置成PWM生成模式，计算并填写好定时器的Period参数
+ * @author lava081
+ */
 #include "pwm.h"
-#include "tim.h" // 定时器头文件
+#include "tim.h" // 系统定时器
 
+/**
+ * @brief 启动 PWM 输出
+ * @details 设置占空比之前要先启动一下pwm输出，当然你想先设置再启动也行
+ */
 void pwm_init(void)
 {
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1); // 启动定时器1 PWM 输出通道1
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1); // 启动定时器2 PWM 输出通道1，有start当然有stop
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
-
-  set_pwm(2, 1, 1); // 设置定时器2 PWM 输出通道1 占空比为1%
-  set_pwm(2, 2, 1); // 设置定时器2 PWM 输出通道2 占空比为1%
-  set_pwm(2, 3, 1); // 设置定时器2 PWM 输出通道3 占空比为1%
-  set_pwm(2, 4, 1); // 设置定时器2 PWM 输出通道4 占空比为1%
 }
 
+/**
+ * @brief 设置 PWM 输出通道占空比
+ * @param timer 定时器编号
+ * @param channel 通道编号
+ * @param percent 占空比，范围0-100.0
+ * @details 本函数不需要随定时器Period参数变化而修改
+ */
 void set_pwm(uint8_t timer, uint8_t channel, float percent)
 {
 
@@ -49,5 +61,5 @@ void set_pwm(uint8_t timer, uint8_t channel, float percent)
   default:
     return; // 无效通道
   }
-  __HAL_TIM_SET_COMPARE(htim, TIM_CHANNEL, (uint32_t)(percent * (htim->Init.Period + 1) / 100));
+  __HAL_TIM_SET_COMPARE(htim, TIM_CHANNEL, (uint32_t)(percent * (htim->Init.Period + 1) / 100)); // 根据Period计算Pulse的值，所以即使频率变了也不用改这里
 }

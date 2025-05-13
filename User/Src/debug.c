@@ -1,23 +1,35 @@
+/**
+ * @file debug.c
+ * @brief 调试逻辑
+ * @author lava081
+ */
 #include "debug.h"
-#include "tcp.h" // TCP头文件
+#include "tcp.h"
 #include "pwm.h"
-#include "esp8266.h" // ESP8266头文件
-#include <stdio.h>   // 标准输入输出库
-#include <string.h>  // 字符串处理库
-#include <stdlib.h>  // 标准库
+#include "esp8266.h"
+#include <string.h> // str系列和mem系列函数
+#include <stdio.h>  // printf系列函数
+#include <stdlib.h> // atof函数
 
-char rx_debug[RX_DEBUG_LEN];    // 字符串类型接收数据缓冲区
-size_t rx_debug_deal_param = 0; // 接收数据处理状态
+char rx_debug[RX_DEBUG_LEN];      // 接收缓冲区: debug
+uint16_t rx_debug_deal_param = 0; // debug接收函数入参
 
 void debug_init(void)
 {
   tx_debug_send("\r调试串口已连接!", 23); // 初始化调试函数
 }
 
-void rx_debug_deal(size_t size)
+/**
+ * @brief 在主循环处理调试信息
+ * @details
+ * TIM2CH0:50.0 定时器2所有通道50%占空比
+ * AT+RST 发送AT指令的重启指令到ESP模块
+ * @param size 接收数据的长度
+ */
+void rx_debug_deal(uint16_t size)
 {
-  tx_debug_send(rx_debug, size);        // 发送接收数据
-  if (strncmp(rx_debug, "TIM", 3) == 0) // 操作定时器参数
+  tx_debug_send(rx_debug, size);        // 回显收到的数据
+  if (strncmp(rx_debug, "TIM", 3) == 0) // 操作定时器
   {
     rx_debug[size] = '\0'; // 添加字符串结束符
     uint8_t timer;
@@ -70,7 +82,8 @@ void rx_debug_deal(size_t size)
   {
     strcat(rx_debug, "\r\n");
     tx_esp_until_result(rx_debug, size + 2); // 发送AT指令
-    //不知道为什么,不能不清理接收缓冲区,所以拿不到返回了,去断点里看吧
-    // tx_debug_send(rx_esp, strlen(rx_esp)); // 发送AT指令返回的数据
+    // 不知道为什么,不能不清理接收缓冲区,所以拿不到返回了,去断点里看吧
+    //  tx_debug_send(rx_esp, strlen(rx_esp)); // 发送AT指令返回的数据
   }
+  memset(rx_debug, 0, size); // 清理接收缓冲区
 }
