@@ -6,7 +6,8 @@
 # Generic Makefile (based on gcc)
 #
 # ChangeLog :
-#	2025-05-08 - 指定使用Os优化和C23特性 + 将User文件夹下的文件添加到编译列表中
+# 2025-05-14 - 尝试支持与c++混合编译 by lava081
+#	2025-05-08 - 指定使用Os优化和C23特性 + 将User文件夹下的文件添加到编译列表中 by lava081
 #	2017-02-10 - Several enhancements + project update mode
 #   2015-07-22 - first version
 # ------------------------------------------------
@@ -23,8 +24,14 @@ TARGET = bsp
 # debug build?
 DEBUG = 1
 # optimization
-OPT = -Os -std=c23
+OPT = -Os
 
+#language version
+# C standard
+C_STANDARD = -std=c23
+
+# C++ standard
+CPP_STANDARD = -std=c++23
 
 #######################################
 # paths
@@ -60,12 +67,17 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
 Core/Src/system_stm32f4xx.c \
+Core/Src/syscalls.c \
+Core/Src/sysmem.c \
 User/Src/user.c \
 User/Src/user_uart.c \
 User/Src/pwm.c \
 User/Src/esp8266.c \
 User/Src/tcp.c \
 User/Src/debug.c
+
+# C++ sources
+CPP_SOURCES =  
 
 # ASM sources
 ASM_SOURCES =  \
@@ -86,11 +98,13 @@ CC = $(GCC_PATH)/$(PREFIX)gcc
 AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
 CP = $(GCC_PATH)/$(PREFIX)objcopy
 SZ = $(GCC_PATH)/$(PREFIX)size
+CPP = $(GCC_PATH)/$(PREFIX)g++
 else
 CC = $(PREFIX)gcc
 AS = $(PREFIX)gcc -x assembler-with-cpp
 CP = $(PREFIX)objcopy
 SZ = $(PREFIX)size
+CPP = $(PREFIX)g++
 endif
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
@@ -119,6 +133,10 @@ C_DEFS =  \
 -DUSE_HAL_DRIVER \
 -DSTM32F407xx
 
+# C++ defines
+CPP_DEFS =  \
+-DUSE_HAL_DRIVER \
+-DSTM32F407xx  
 
 # AS includes
 AS_INCLUDES = 
@@ -132,19 +150,26 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Include \
 -IUser/Inc
 
+# C++ includes
+CPP_INCLUDES =  \
+-IUser/Inc
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
-CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) $(C_STANDARD) -Wall -fdata-sections -ffunction-sections
+
+CPPFLAGS += $(MCU) $(CPP_DEFS) $(CPP_INCLUDES) $(OPT) $(CPP_STANDARD) -Wall -fdata-sections -ffunction-sections -fno-exceptions -fno-rtti
 
 ifeq ($(DEBUG), 1)
+CFLAGS += -g -gdwarf-2
 CFLAGS += -g -gdwarf-2
 endif
 
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
+CPPFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
 
 #######################################
@@ -154,7 +179,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 LDSCRIPT = STM32F407XX_FLASH.ld
 
 # libraries
-LIBS = -lc -lm -lnosys 
+LIBS = -lc -lm -lnosys -lstdc++
 LIBDIR = 
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
@@ -166,7 +191,11 @@ all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET
 # build the application
 #######################################
 # list of objects
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
+# list of C++ program objects
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(CPP_SOURCES:.cpp=.o)))
+vpath %.cpp $(sort $(dir $(CPP_SOURCES)))
+# list of C program objects
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
 vpath %.c $(sort $(dir $(C_SOURCES)))
 # list of ASM program objects
 OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
@@ -174,6 +203,8 @@ vpath %.s $(sort $(dir $(ASM_SOURCES)))
 OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASMM_SOURCES:.S=.o)))
 vpath %.S $(sort $(dir $(ASMM_SOURCES)))
 
+$(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
+	$(CPP) -c $(CPPFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
 	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
@@ -183,7 +214,7 @@ $(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CPP) $(OBJECTS) $(LDFLAGS) -o $@
 	$(SZ) $@
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
