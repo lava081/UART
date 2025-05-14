@@ -7,12 +7,15 @@
 #include "tcp.h"
 #include "pwm.h"
 #include "esp8266.h"
-#include <string.h> // str系列和mem系列函数
-#include <stdio.h>  // printf系列函数
-#include <stdlib.h> // atof函数
+#include <string.h>  // str系列和mem系列函数
+#include <stdio.h>   // printf系列函数
+#include <stdlib.h>  // atof函数
+#include <stdbool.h> // bool类型
 
 char rx_debug[RX_DEBUG_LEN];      // 接收缓冲区: debug
 uint16_t rx_debug_deal_param = 0; // debug接收函数入参
+
+uint16_t neofetch(char *info_buffer);
 
 void debug_init(void)
 {
@@ -85,5 +88,81 @@ void rx_debug_deal(uint16_t size)
     // 不知道为什么,不能不清理接收缓冲区,所以拿不到返回了,去断点里看吧
     //  tx_debug_send(rx_esp, strlen(rx_esp)); // 发送AT指令返回的数据
   }
+  else if (strncmp(rx_debug, "neofetch", 8) == 0)
+  {
+    #define neorows 13
+    char info_buffer[neorows * 70];
+    uint16_t len = neofetch(info_buffer);
+    sprintf(info_buffer + len, "%d secs", (int)(HAL_GetTick() / 1000)); // 获取系统运行时间
+    tx_debug_send(info_buffer, strlen(info_buffer)); // 发送系统信息
+  }
+  else
+  {
+    tx_debug_send("\ncommand not found", 18); // 未知命令
+  }
   memset(rx_debug, 0, size); // 清理接收缓冲区
+}
+
+static uint8_t logo_st[neorows][6] = {
+    {14, 28},
+    {7, 35},
+    {6, 5},
+    {5, 5},
+    {5, 4, 4, 16, 4, 7},
+    {4, 5, 5, 14, 5, 6},
+    {3, 8, 6, 11, 4, 6},
+    {2, 11, 6, 8, 4, 6},
+    {1, 14, 5, 6, 4, 6},
+    {1, 14, 5, 5, 4, 7},
+    {19, 5, 4, 7},
+    {18, 5, 5, 4}};
+
+static char sys_info[neorows][30] = {
+    "lava081@STM32F4xx",
+    "------------------",
+    "OS: None thumb",
+    "Device: STM32F407ZGT6",
+    "CPU: Cortex-M4 (1) @ 144MHz",
+    "FPU: FPv4-SP-D16",
+    "Memory: 192k bit",
+    "Flash: 1024k bit",
+    "Storage: disabled",
+    "Shell: debug.c",
+    "Terminal: TCP@ESP8266",
+    "Network: ESP8266@USART2",
+    "Uptime: "};
+
+uint16_t neofetch(char *info_buffer){
+  char *info_ptr = info_buffer;
+  uint8_t i, j, k;
+  bool black = 0;
+  for (i = 0; i < neorows; i++)
+  {
+    char *y_ptr = info_ptr;
+    *info_ptr++ = '\n';
+    for (j = 0; j < 6; j++)
+    {
+      for (k = 0; k < logo_st[i][j]; k++)
+      {
+        if (black)
+        {
+          *info_ptr++ = '*';
+        }
+        else
+        {
+          *info_ptr++ = ' ';
+        }
+      }
+      black = !black;
+    }
+    while(info_ptr - y_ptr < 45)
+    {
+      *info_ptr++ = ' ';
+    }
+    for (j = 0; j < strlen(sys_info[i]); j++)
+    {
+      *info_ptr++ = sys_info[i][j];
+    }
+  }
+  return info_ptr - info_buffer;
 }

@@ -1,5 +1,5 @@
 /**
- * @file pwm.c
+ * @file pwm.h
  * @brief PWM输出控制
  * @author lava081
  */
