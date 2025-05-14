@@ -7,10 +7,11 @@
  * @author lava081
  */
 #include "user_uart.h"
-#include "usart.h"     // 系统串口
+#include "usart.h" // 系统串口
 
 /** 所有需要收发串口的模块在这导入 */
 #include "esp8266.h"
+#include "syn6288.h"
 
 /**
  * @brief 依次启用各串口接收
@@ -18,6 +19,7 @@
 void user_uart_init(void)
 {
   HAL_UARTEx_ReceiveToIdle_IT(&huart2, (uint8_t *)rx_esp, RX_ESP_LEN); // 串口接收空闲中断
+  HAL_UART_Receive_IT(&huart3, &rx_syn6288_state, 1);                  // 单字节串口接收中断
 }
 
 /**
@@ -34,6 +36,14 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size)
   }
 }
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  if (huart->Instance == USART3)
+  {
+    HAL_UART_Receive_IT(&huart3, &rx_syn6288_state, 1); // 重新开启接收中断
+  }
+}
+
 /** 以下实现各外设的串口发送函数 */
 
 /**
@@ -44,4 +54,14 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size)
 void tx_esp_send(char *str, uint16_t len)
 {
   HAL_UART_Transmit_IT(&huart2, (uint8_t *)str, len); // 发送中断
+}
+
+/**
+ * @brief 从串口发送数据到语音合成模块
+ * @param str: 要发送的数据
+ * @param len: 数据长度
+ */
+void tx_syn6288_send(char *str, uint16_t len)
+{
+  HAL_UART_Transmit_IT(&huart3, (uint8_t *)str, len); // 发送中断
 }

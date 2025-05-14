@@ -7,7 +7,7 @@
 #include "tcp.h"
 #include "pwm.h"
 #include "esp8266.h"
-#include "user_string.h"
+#include "syn6288.h"
 #include <string.h>  // str系列和mem系列函数
 #include <stdio.h>   // printf系列函数
 #include <stdlib.h>  // atof函数
@@ -37,7 +37,7 @@ void debug_init(void)
  */
 void rx_debug_deal(uint16_t size)
 {
-  tx_debug_send(rx_debug, size);        // 回显收到的数据
+  // tx_debug_send(rx_debug, size);        // 回显收到的数据
   if (strncmp(rx_debug, "TIM", 3) == 0) // 操作定时器
   {
     rx_debug[size] = '\0'; // 添加字符串结束符
@@ -99,11 +99,14 @@ void rx_debug_deal(uint16_t size)
     uint16_t len = neofetch(info_buffer);
     tx_debug_send(info_buffer, len); // 发送系统信息
   }
-  else if (strncmp(rx_debug, "utf16", 5) == 0)
+  else if (strncmp(rx_debug, "say", 3) == 0)
   {
-    char utf16[30] = {'\r'};
-    uint16_t len = utf8_utf16BE(utf16 + 1, rx_debug + 6); // 转换为UTF-16BE
-    tx_debug_send(utf16, len + 1); // 发送转换后的数据
+    syn6288_send(rx_debug + 4, size - 4);                        // 发送语音合成指令
+    while (rx_syn6288_state == 0x41 || rx_syn6288_state == 0x4E) // 等待上次发送完成
+    {
+      HAL_Delay(500);
+    }
+    tx_debug_send((char *)&rx_syn6288_state, 1);
   }
   else
   {
