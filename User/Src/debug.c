@@ -7,6 +7,7 @@
 #include "tcp.h"
 #include "pwm.h"
 #include "esp8266.h"
+#include "user_string.h"
 #include <string.h>  // str系列和mem系列函数
 #include <stdio.h>   // printf系列函数
 #include <stdlib.h>  // atof函数
@@ -82,7 +83,7 @@ void rx_debug_deal(uint16_t size)
         sprintf(tip, "CH%d", channel); // 将整数转换为字符串
       }
       char tx_debug[10];                                 // 发送缓冲区
-      sprintf(tx_debug, "\n%s %d%%", tip, (int)percent); // 不知道为什么打印不了%f，投降
+      sprintf(tx_debug, "\n%s %d%%", tip, (int)percent); // %f被nano.specs砍掉力
       tx_debug_send(tx_debug, strlen(tx_debug));
     }
   }
@@ -97,6 +98,12 @@ void rx_debug_deal(uint16_t size)
   {
     uint16_t len = neofetch(info_buffer);
     tx_debug_send(info_buffer, len); // 发送系统信息
+  }
+  else if (strncmp(rx_debug, "utf16", 5) == 0)
+  {
+    char utf16[30] = {'\r'};
+    uint16_t len = utf8_utf16BE(utf16 + 1, rx_debug + 6); // 转换为UTF-16BE
+    tx_debug_send(utf16, len + 1); // 发送转换后的数据
   }
   else
   {

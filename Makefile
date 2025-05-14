@@ -77,7 +77,8 @@ User/Src/tcp.c \
 User/Src/debug.c
 
 # C++ sources
-CPP_SOURCES =  
+CPP_SOURCES =  \
+User/Src/user_string.cpp
 
 # ASM sources
 ASM_SOURCES =  \
