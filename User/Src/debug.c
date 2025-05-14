@@ -16,9 +16,14 @@ char rx_debug[RX_DEBUG_LEN];      // 接收缓冲区: debug
 uint16_t rx_debug_deal_param = 0; // debug接收函数入参
 
 uint16_t neofetch(char *info_buffer);
+#define neorows 13
+char info_buffer[neorows * 70];
 
 void debug_init(void)
 {
+  uint16_t len = neofetch(info_buffer);
+  tx_debug_send(info_buffer, len); // 发送系统信息
+
   tx_debug_send("\r调试串口已连接!", 23); // 初始化调试函数
 }
 
@@ -90,11 +95,8 @@ void rx_debug_deal(uint16_t size)
   }
   else if (strncmp(rx_debug, "neofetch", 8) == 0)
   {
-    #define neorows 13
-    char info_buffer[neorows * 70];
     uint16_t len = neofetch(info_buffer);
-    sprintf(info_buffer + len, "%d secs", (int)(HAL_GetTick() / 1000)); // 获取系统运行时间
-    tx_debug_send(info_buffer, strlen(info_buffer)); // 发送系统信息
+    tx_debug_send(info_buffer, len); // 发送系统信息
   }
   else
   {
@@ -132,7 +134,8 @@ static char sys_info[neorows][30] = {
     "Network: ESP8266@USART2",
     "Uptime: "};
 
-uint16_t neofetch(char *info_buffer){
+uint16_t neofetch(char *info_buffer)
+{
   char *info_ptr = info_buffer;
   uint8_t i, j, k;
   bool black = 0;
@@ -155,7 +158,7 @@ uint16_t neofetch(char *info_buffer){
       }
       black = !black;
     }
-    while(info_ptr - y_ptr < 45)
+    while (info_ptr - y_ptr < 45)
     {
       *info_ptr++ = ' ';
     }
@@ -164,5 +167,6 @@ uint16_t neofetch(char *info_buffer){
       *info_ptr++ = sys_info[i][j];
     }
   }
-  return info_ptr - info_buffer;
+  sprintf(info_ptr, "%d secs", (int)(HAL_GetTick() / 1000)); // 获取系统运行时间
+  return strlen(info_buffer);
 }
