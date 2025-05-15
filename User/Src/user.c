@@ -15,6 +15,7 @@ void user_init(void)
   pwm_init();
   esp_init();
   tcp_init();
+  syn6288_init();
   debug_init();
 }
 

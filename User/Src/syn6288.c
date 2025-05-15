@@ -7,6 +7,11 @@ char tx_syn6288[TX_SYN6288_LEN + 6] = {0xFD, 0x00, 0x00, 0x01, 0x03}; // 发送�
 
 uint8_t rx_syn6288_state;
 
+void syn6288_init(void)
+{
+  syn6288_send("[o1][v1][t5]", 12); // word-by-word，音量1(max16)，语速5(max5)
+}
+
 void syn6288_send(const char *utf8, const uint16_t utf8_len)
 {
   while (rx_syn6288_state == 0x41 || rx_syn6288_state == 0x4E) // 等待上次发送完成

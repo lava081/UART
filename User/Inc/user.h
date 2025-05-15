@@ -5,11 +5,14 @@
  */
 
 /** 在此导入所有用户逻辑的头文件 */
+#ifndef __MAIN_H
 #include "debug.h"
 #include "pwm.h"
 #include "user_uart.h"
 #include "esp8266.h"
 #include "tcp.h"
+#include "syn6288.h"
+#endif
 
 /**
  * @brief 初始化用户部分
