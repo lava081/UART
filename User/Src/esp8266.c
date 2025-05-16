@@ -40,17 +40,18 @@ void esp_init(void)
 void rx_esp_deal_IT(uint16_t size)
 {
   rx_esp[size] = '\0'; // 让strstr轻松点
-  if (strstr(rx_esp, "OK"))
+
+  if (strstr(rx_esp, "+IPD")) // 收到对端消息
+  {
+    rx_tcp_deal_IT(strstr(rx_esp, "+IPD"), size + rx_esp - strstr(rx_esp, "+IPD")); // 浅浅去个头，相信编译器会优化这里的
+  }
+  else if (strstr(rx_esp, "OK"))
   {
     ESP_STATE = ESP_OK;
   }
   else if (strstr(rx_esp, "ERROR"))
   {
     ESP_STATE = ESP_ERROR;
-  }
-  else if (strstr(rx_esp, "+IPD")) // 收到对端消息
-  {
-    rx_tcp_deal_IT(strstr(rx_esp, "+IPD"), size + rx_esp - strstr(rx_esp, "+IPD")); // 浅浅去个头，相信编译器会优化这里的
   }
   else if (strstr(rx_esp, "WIFI GOT IP"))
   {
