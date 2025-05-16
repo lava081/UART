@@ -56,7 +56,7 @@ void rx_esp_deal_IT(uint16_t size)
   {
     ESP_STATE = ESP_WIFI_CONNECTED;
   }
-  memset(rx_esp, 0, size); // 清除接收缓冲区
+  // memset(rx_esp, 0, size); // 清除接收缓冲区
 }
 
 /**

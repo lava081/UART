@@ -31,4 +31,8 @@ void user_deal(void)
     rx_debug_deal(rx_debug_deal_param);
     rx_debug_deal_param = 0; // 清除标志位
   }
+  if (syn6288_send_param_2)
+  {
+    _syn6288_send(syn6288_send_param_1, syn6288_send_param_2);
+  }
 }

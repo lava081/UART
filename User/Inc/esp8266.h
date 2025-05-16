@@ -46,7 +46,7 @@ void rx_esp_deal_IT(uint16_t size);
 void tx_esp_send(char *str, uint16_t len);
 
 /**
- * @brief （内部方法）发送数据到ESP8266,出错重传
+ * @brief （内部方法）（阻塞）发送数据到ESP8266,出错重传
  * @details 该方法非直接实现消息发送，消息发送请从对应通信类型子模块调用
  * @param str 发送的字符串
  * @param len 发送数据的长度
@@ -54,7 +54,7 @@ void tx_esp_send(char *str, uint16_t len);
 void tx_esp_until_success(char *str, uint16_t len);
 
 /**
- * @brief （内部方法）发送数据到ESP8266，超时视为出错，不重传
+ * @brief （内部方法）（阻塞）发送数据到ESP8266，超时视为出错，不重传
  * @details 该方法非直接实现消息发送，消息发送请从对应通信类型子模块调用send()函数
  * @param str 发送的字符串
  * @param len 发送数据的长度

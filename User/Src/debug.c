@@ -13,8 +13,8 @@
 #include <stdlib.h>  // atof函数
 #include <stdbool.h> // bool类型
 
-char rx_debug[RX_DEBUG_LEN];      // 接收缓冲区: debug
-uint16_t rx_debug_deal_param = 0; // debug接收函数入参
+char rx_debug[RX_DEBUG_LEN];               // 接收缓冲区: debug
+volatile uint16_t rx_debug_deal_param = 0; // debug接收函数入参
 
 uint16_t neofetch(char *info_buffer);
 #define neorows 13
@@ -38,9 +38,9 @@ void debug_init(void)
 void rx_debug_deal(uint16_t size)
 {
   // tx_debug_send(rx_debug, size);        // 回显收到的数据
+  rx_debug[size] = '\0';                // 添加字符串结束符
   if (strncmp(rx_debug, "TIM", 3) == 0) // 操作定时器
   {
-    rx_debug[size] = '\0'; // 添加字符串结束符
     uint8_t timer;
     timer = rx_debug[3] - '0';               // 你问我想用TIM12怎么办？那我问你，你不会改成固定两位编码然后加减乘除吗？
     if (strncmp(rx_debug + 4, "CH", 2) == 0) // 设置定时器输出占空比
@@ -91,7 +91,6 @@ void rx_debug_deal(uint16_t size)
   {
     strcat(rx_debug, "\r\n");
     tx_esp_until_result(rx_debug, size + 2); // 发送AT指令
-    // 不知道为什么,不能不清理接收缓冲区,所以拿不到返回了,去断点里看吧
     //  tx_debug_send(rx_esp, strlen(rx_esp)); // 发送AT指令返回的数据
   }
   else if (strncmp(rx_debug, "neofetch", 8) == 0)
@@ -101,18 +100,13 @@ void rx_debug_deal(uint16_t size)
   }
   else if (strncmp(rx_debug, "say", 3) == 0)
   {
-    syn6288_send(rx_debug + 4, size - 4);                        // 发送语音合成指令
-    while (rx_syn6288_state == 0x41 || rx_syn6288_state == 0x4E) // 等待上次发送完成
-    {
-      HAL_Delay(500);
-    }
-    tx_debug_send((char *)&rx_syn6288_state, 1);
+    syn6288_send(rx_debug + 4, size - 4); // 发送语音合成指令
   }
   else
   {
     tx_debug_send("\ncommand not found", 18); // 未知命令
   }
-  memset(rx_debug, 0, size); // 清理接收缓冲区
+  // memset(rx_debug, 0, size); // 清理接收缓冲区
 }
 
 static uint8_t logo_st[neorows][6] = {

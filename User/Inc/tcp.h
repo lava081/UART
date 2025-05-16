@@ -12,7 +12,7 @@
 void tcp_init(void);
 
 /**
- * @brief 发消息到对端
+ * @brief （阻塞）发消息到对端
  * @param id link ID
  * @param str 发送的字符串
  * @param len 发送数据的长度

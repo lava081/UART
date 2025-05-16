@@ -2,6 +2,7 @@
   "cmake.ignoreCMakeListsMissing": true,
   "files.associations": {
     "codecvt": "cpp",
-    "syn6288.h": "c"
+    "syn6288.h": "c",
+    "main.h": "c"
   }
 }

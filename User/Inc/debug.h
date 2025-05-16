@@ -20,8 +20,8 @@ void rx_debug_deal(uint16_t size);
  */
 void tx_debug_send(char *str, uint16_t len);
 
-#define RX_DEBUG_LEN 100 // 定义接收缓冲区大小(bit): debug
+#define RX_DEBUG_LEN 2920 // 定义接收缓冲区大小(bit): debug
 
 extern char rx_debug[RX_DEBUG_LEN]; // 接收缓冲区: debug
 
-extern uint16_t rx_debug_deal_param; // debug接收函数入参
+extern volatile uint16_t rx_debug_deal_param; // debug接收函数入参
