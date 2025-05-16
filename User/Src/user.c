@@ -4,6 +4,7 @@
  * @author lava081
  */
 #include "user.h"
+#include <string.h> // str系列和mem系列函数
 
 /**
  * @brief 初始化用户部分
@@ -28,6 +29,7 @@ void user_deal(void)
   /** debug.c 有待处理消息  */
   if (rx_debug_deal_param)
   {
+    memcpy(rx_debug, rx_debug_ptr, rx_debug_deal_param); // 拷贝数据
     rx_debug_deal(rx_debug_deal_param);
     rx_debug_deal_param = 0; // 清除标志位
   }

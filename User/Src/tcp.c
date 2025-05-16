@@ -81,7 +81,7 @@ void rx_tcp_deal_IT(char *str, uint16_t str_len)
   {
     /** 以下添加消息消费者 */
   case DEBUG_SERVER_ID:
-    memcpy(rx_debug, p1, len); // 拷贝数据
+    rx_debug_ptr = p1; // 设置接收缓冲区指针，指向消息内容
     rx_debug_deal_param = len; // 通知接收函数开始处理数据
     break;
   }

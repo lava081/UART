@@ -24,4 +24,6 @@ void tx_debug_send(char *str, uint16_t len);
 
 extern char rx_debug[RX_DEBUG_LEN]; // 接收缓冲区: debug
 
+extern char *rx_debug_ptr; // 接收缓冲区指针，该指针的内容会在主循环中被拷贝到接收缓冲区
+
 extern volatile uint16_t rx_debug_deal_param; // debug接收函数入参

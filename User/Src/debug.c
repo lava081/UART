@@ -14,6 +14,7 @@
 #include <stdbool.h> // bool类型
 
 char rx_debug[RX_DEBUG_LEN];               // 接收缓冲区: debug
+char *rx_debug_ptr; // 接收缓冲区指针
 volatile uint16_t rx_debug_deal_param = 0; // debug接收函数入参
 
 uint16_t neofetch(char *info_buffer);
