@@ -18,21 +18,22 @@
  */
 void user_uart_init(void)
 {
-  HAL_UARTEx_ReceiveToIdle_IT(&huart2, (uint8_t *)rx_esp, RX_ESP_LEN); // 串口接收空闲中断
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart6, (uint8_t *)rx_esp, RX_ESP_LEN); // 串口接收空闲中断
   HAL_UART_Receive_IT(&huart3, &rx_syn6288_state, 1);                  // 单字节串口接收中断
 }
 
 /**
  * @brief 接收完成中断回调函数
  * @param huart: 指向 UART_HandleTypeDef 结构体的指针
+ *
  * @param Size: 接收到的数据长度
  */
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size)
 {
-  if (huart->Instance == USART2)
+  if (huart->Instance == USART6)
   {
     rx_esp_deal_IT(size);                                                // 调用外设的接收处理函数，调用完记得清缓冲区
-    HAL_UARTEx_ReceiveToIdle_IT(&huart2, (uint8_t *)rx_esp, RX_ESP_LEN); // 重新开启接收中断
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart6, (uint8_t *)rx_esp, RX_ESP_LEN); // 重新开启接收中断
   }
 }
 
@@ -53,7 +54,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  */
 void tx_esp_send(char *str, uint16_t len)
 {
-  HAL_UART_Transmit_IT(&huart2, (uint8_t *)str, len); // 发送中断
+  HAL_UART_Transmit_DMA(&huart6, (uint8_t *)str, len); // 发送中断
 }
 
 /**
@@ -64,4 +65,24 @@ void tx_esp_send(char *str, uint16_t len)
 void tx_syn6288_send(char *str, uint16_t len)
 {
   HAL_UART_Transmit_IT(&huart3, (uint8_t *)str, len); // 发送中断
+}
+
+/**
+ * @brief 串口错误回调函数
+ * @param huart: 指向 UART_HandleTypeDef 结构体的指针
+ * @details
+ * 该函数在串口发生错误时被调用，重新开启接收中断。
+ * 可以通过查看 huart->ErrorCode 来获取错误类型。
+ */
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+{
+  huart->ErrorCode = HAL_UART_ERROR_NONE;
+  if (huart == &huart6)
+  {
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart6, (uint8_t *)rx_esp, RX_ESP_LEN); // 重新开启接收中断
+  }
+  else if (huart == &huart3)
+  {
+    HAL_UART_Receive_IT(&huart3, &rx_syn6288_state, 1); // 重新开启接收中断
+  }
 }
