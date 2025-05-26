@@ -12,6 +12,7 @@
 #include "esp8266.h"
 #include "tcp.h"
 #include "syn6288.h"
+#include "inmp441.h"
 #endif
 
 /**

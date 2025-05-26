@@ -6,7 +6,7 @@
 #include "main.h"
 
 /** 自定义配置 */
-#define RX_ESP_LEN 2920          // 接收缓冲区大小(bit): ESP8266
+#define RX_ESP_LEN 2048          // 接收缓冲区大小(bit): ESP8266
 #define TX_ESP_RETRY 3           // 最大发送重试次数
 #define TX_ESP_TIMEOUT 5000      // 单次发送超时(ms)
 #define ESP_PING_URL "gitee.com" // ping的url，不要用IP地址，需确保能解析

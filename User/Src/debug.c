@@ -8,10 +8,10 @@
 #include "pwm.h"
 #include "esp8266.h"
 #include "syn6288.h"
+#include "i2s.h"
 #include <string.h>  // str系列和mem系列函数
 #include <stdio.h>   // printf系列函数
 #include <stdlib.h>  // atof函数
-#include <stdbool.h> // bool类型
 
 char rx_debug[RX_DEBUG_LEN];               // 接收缓冲区: debug
 char *rx_debug_ptr; // 接收缓冲区指针
@@ -24,6 +24,7 @@ char info_buffer[neorows * 70];
 void debug_init(void)
 {
   uint16_t len = neofetch(info_buffer);
+
   tx_debug_send(info_buffer, len); // 发送系统信息
 
   tx_debug_send("\r调试串口已连接!", 23); // 初始化调试函数
@@ -143,7 +144,7 @@ uint16_t neofetch(char *info_buffer)
 {
   char *info_ptr = info_buffer;
   uint8_t i, j, k;
-  bool black = 0;
+  uint8_t black = 0;
   for (i = 0; i < neorows; i++)
   {
     char *y_ptr = info_ptr;

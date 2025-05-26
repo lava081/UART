@@ -17,6 +17,7 @@ void user_init(void)
   esp_init();
   tcp_init();
   syn6288_init();
+  inmp441_init();
   debug_init();
 }
 
@@ -36,5 +37,9 @@ void user_deal(void)
   if (syn6288_send_param_2)
   {
     _syn6288_send(syn6288_send_param_1, syn6288_send_param_2);
+  }
+  if (inmp441_buffer_index & 0x10)
+  {
+    tx_inmp441_send(inmp441_buffer_index);
   }
 }
