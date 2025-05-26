@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "dma.h"
+#include "i2s.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -96,6 +97,7 @@ int main(void)
   MX_TIM2_Init();
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
+  MX_I2S3_Init();
   /* USER CODE BEGIN 2 */
 
   user_init();
