@@ -9,6 +9,7 @@
 #include "esp8266.h"
 #include "syn6288.h"
 #include "i2s.h"
+#include "l298n.h"
 #include <string.h>  // str系列和mem系列函数
 #include <stdio.h>   // printf系列函数
 #include <stdlib.h>  // atof函数
@@ -70,14 +71,14 @@ void rx_debug_deal(uint16_t size)
       else if (channel == 5)
       {
         set_pwm(timer, 1, percent);
-        set_pwm(timer, 3, percent);
-        strcpy(tip, "1&3");
+        set_pwm(timer, 2, percent);
+        strcpy(tip, "1&2");
       }
       else if (channel == 6)
       {
-        set_pwm(timer, 2, percent);
+        set_pwm(timer, 3, percent);
         set_pwm(timer, 4, percent);
-        strcpy(tip, "2&4");
+        strcpy(tip, "3&4");
       }
       else
       {
@@ -87,6 +88,38 @@ void rx_debug_deal(uint16_t size)
       char tx_debug[10];                                 // 发送缓冲区
       sprintf(tx_debug, "\n%s %d%%", tip, (int)percent); // %f被nano.specs砍掉力
       tx_debug_send(tx_debug, strlen(tx_debug));
+    }
+  }
+  else if (strncmp(rx_debug, "CAR", 3) == 0)
+  {
+    if (strncmp(rx_debug + 3, "W", 1) == 0) // 前进
+    {
+      l298n_forward();
+      tx_debug_send("\nCAR FORWARD", 13);
+    }
+    else if (strncmp(rx_debug + 3, "S", 1) == 0) // 后退
+    {
+      l298n_backward();
+      tx_debug_send("\nCAR BACKWARD", 14);
+    }
+    else if (strncmp(rx_debug + 3, "A", 1) == 0) // 左转
+    {
+      l298n_left();
+      tx_debug_send("\nCAR LEFT", 10);
+    }
+    else if (strncmp(rx_debug + 3, "D", 1) == 0) // 右转
+    {
+      l298n_right();
+      tx_debug_send("\nCAR RIGHT", 11);
+    }
+    else if (strncmp(rx_debug + 3, "Q", 1) == 0) // 停止
+    {
+      l298n_stop();
+      tx_debug_send("\nCAR STOP", 10);
+    }
+    else
+    {
+      tx_debug_send("\ncommand not found", 18); // 未知命令
     }
   }
   else if (strncmp(rx_debug, "AT", 2) == 0)

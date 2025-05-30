@@ -80,7 +80,8 @@ User/Src/esp8266.c \
 User/Src/tcp.c \
 User/Src/debug.c \
 User/Src/syn6288.c \
-User/Src/inmp441.c
+User/Src/inmp441.c \
+User/Src/l298n.c \
 
 # C++ sources
 CPP_SOURCES = \

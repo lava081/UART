@@ -17,7 +17,7 @@ void user_init(void)
   esp_init();
   tcp_init();
   syn6288_init();
-  inmp441_init();
+  // inmp441_init();
   debug_init();
 }
 
