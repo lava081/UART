@@ -2,6 +2,7 @@
 
 void l298n_set(uint8_t cmd);
 
+// 假设四个轮子按↗↘↖↙排列
 void l298n_set(uint8_t cmd)
 {
   // 第一块L298N模块的INA~D
@@ -32,12 +33,12 @@ void l298n_backward(void)
   l298n_set(0x55); // 01010101
 }
 
-void l298n_left(void)
+void l298n_right(void)
 {
   l298n_set(0x5A); // 01011010
 }
 
-void l298n_right(void)
+void l298n_left(void)
 {
   l298n_set(0xA5); // 10100101
 }
