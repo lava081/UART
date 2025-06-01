@@ -14,6 +14,7 @@ void user_init(void)
   /** 依次初始化各个外设 */
   user_uart_init();
   pwm_init();
+  fc03_init();
   esp_init();
   tcp_init();
   syn6288_init();

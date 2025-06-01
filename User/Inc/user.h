@@ -13,6 +13,7 @@
 #include "tcp.h"
 #include "syn6288.h"
 #include "inmp441.h"
+#include "fc03.h"
 #endif
 
 /**
