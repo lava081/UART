@@ -4,6 +4,7 @@
     "codecvt": "cpp",
     "syn6288.h": "c",
     "main.h": "c",
-    "i2s.h": "c"
+    "i2s.h": "c",
+    "tcp.h": "c"
   }
 }

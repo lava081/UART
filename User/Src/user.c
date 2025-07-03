@@ -19,6 +19,7 @@ void user_init(void)
   tcp_init();
   syn6288_init();
   // inmp441_init();
+  shome_init();
   debug_init();
 }
 
@@ -34,6 +35,13 @@ void user_deal(void)
     memcpy(rx_debug, rx_debug_ptr, rx_debug_deal_param); // 拷贝数据
     rx_debug_deal(rx_debug_deal_param);
     rx_debug_deal_param = 0; // 清除标志位
+  }
+  /** shome.c 有待处理消息 */
+  if (rx_shome_deal_param)
+  {
+    memcpy(rx_shome, rx_shome_ptr, rx_shome_deal_param); // 拷贝数据
+    rx_shome_deal(rx_shome_deal_param);
+    rx_shome_deal_param = 0; // 清除标志位
   }
   if (syn6288_send_param_2)
   {

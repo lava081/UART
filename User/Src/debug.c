@@ -10,6 +10,7 @@
 #include "syn6288.h"
 #include "i2s.h"
 #include "l298n.h"
+#include "shome.h"
 #include <string.h>  // str系列和mem系列函数
 #include <stdio.h>   // printf系列函数
 #include <stdlib.h>  // atof函数
@@ -137,6 +138,17 @@ void rx_debug_deal(uint16_t size)
   {
     syn6288_send(rx_debug + 4, size - 4); // 发送语音合成指令
   }
+  else if (strncmp(rx_debug, "FAN_",4) == 0)
+  {
+    if (strncmp(rx_debug + 4, "ON", 2) == 0) // 开风扇
+    {
+      fan_on();
+    }
+    else if (strncmp(rx_debug + 4, "OF", 2) == 0) // 关风扇
+    {
+      fan_off();
+    }
+  }
   else
   {
     tx_debug_send("\ncommand not found", 18); // 未知命令
@@ -170,7 +182,7 @@ static char sys_info[neorows][30] = {
     "Storage: disabled",
     "Shell: debug.c",
     "Terminal: TCP@ESP8266",
-    "Network: ESP8266@USART2",
+    "Network: ESP8266@USART6",
     "Uptime: "};
 
 uint16_t neofetch(char *info_buffer)

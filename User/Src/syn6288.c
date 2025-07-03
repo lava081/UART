@@ -14,7 +14,7 @@ uint32_t syn6288_start_systick;         // 发送开始的系统滴答时间: sy
 void syn6288_init(void)
 {
   syn6288_start_systick = HAL_GetTick(); // 初始化发送开始时间
-  syn6288_send("[o1][v5][t5]", 12);      // word-by-word，音量1(max16)，语速5(max5)
+  syn6288_send("[o1][v9][t5]", 12);      // word-by-word，音量1(max16)，语速5(max5)
 }
 
 void _syn6288_send(char *utf8, uint16_t utf8_len)

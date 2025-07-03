@@ -26,3 +26,9 @@ void tcp_send(uint8_t id, char *str, uint16_t len);
 #define DEBUG_SERVER_HOST "192.168.43.49" // 主机号，不允许域名
 #define DEBUG_SERVER_PORT 2345            // 端口号
 #define DEBUG_SERVER_KEEP_ALIVE 0         // keep alive间隔，单位秒，次数3
+
+/** udp SHOME服务器 */
+#define SHOME_SERVER_ID 1                 // shome服务器 link ID
+#define SHOME_SERVER_HOST "192.168.43.49" // 主机号，不允许域名
+#define SHOME_SERVER_PORT 9191            // 端口号
+#define SHOME_LOCAL_PORT 8080             // 本地端口
