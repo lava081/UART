@@ -25,7 +25,6 @@ void user_uart_init(void)
 /**
  * @brief 接收完成中断回调函数
  * @param huart: 指向 UART_HandleTypeDef 结构体的指针
- *
  * @param Size: 接收到的数据长度
  */
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size)

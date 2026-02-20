@@ -6,6 +6,8 @@
 
 /** 在此导入所有用户逻辑的头文件 */
 #ifndef __MAIN_H
+#include "bsp_led.h"
+#include "bsp_key.h"
 #include "debug.h"
 #include "pwm.h"
 #include "user_uart.h"

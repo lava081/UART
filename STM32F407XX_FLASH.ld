@@ -77,6 +77,13 @@ SECTIONS
     . = ALIGN(4);
   } >FLASH
 
+  .reserved_region (NOLOAD) :
+  {
+    . = ALIGN(4);
+    . = . + 0x20000 - (SIZEOF(.isr_vector));  /* 预留区域大小 */
+    . = ALIGN(4);
+  } >FLASH
+
   /* The program code and other data goes into FLASH */
   .text :
   {

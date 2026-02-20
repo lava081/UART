@@ -11,6 +11,8 @@
 #include "i2s.h"
 #include "l298n.h"
 #include "shome.h"
+#include "bsp_key.h" // 按键处理
+#include "bsp_led.h" // LED处理
 #include <string.h>  // str系列和mem系列函数
 #include <stdio.h>   // printf系列函数
 #include <stdlib.h>  // atof函数
@@ -30,6 +32,28 @@ void debug_init(void)
   tx_debug_send(info_buffer, len); // 发送系统信息
 
   tx_debug_send("\r调试串口已连接!", 23); // 初始化调试函数
+}
+
+void BSP_Key_deal(void)
+{
+  BSP_Key_read(); // 读取按键状态
+  if (BSP_Key_state != BSP_KEY_RELEASED) // 如果按键状态不是松开
+  {
+    if (BSP_Key_state == BSP_KEY_PRESSED) // 短按
+    {
+      tx_debug_send("\n按键短按", 13); // 发送调试信息
+    }
+    else if (BSP_Key_state == BSP_KEY_DOUBLE_PRESSED) // 双击
+    {
+      BSP_LED_Toggle(); // 切换LED状态
+      tx_debug_send("\n按键双击", 13); // 发送调试信息
+    }
+    else if (BSP_Key_state == BSP_KEY_LONG_PRESSED) // 长按
+    {
+      tx_debug_send("\n按键长按", 13); // 发送调试信息
+    }
+    BSP_Key_state = BSP_KEY_RELEASED;
+  }
 }
 
 /**

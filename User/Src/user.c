@@ -12,6 +12,7 @@
 void user_init(void)
 {
   /** 依次初始化各个外设 */
+  BSP_LED_Init(); // 初始化LED
   user_uart_init();
   pwm_init();
   fc03_init();
@@ -51,4 +52,5 @@ void user_deal(void)
   {
     tx_inmp441_send(inmp441_buffer_index);
   }
+  BSP_Key_deal(); // 处理按键状态变化
 }
